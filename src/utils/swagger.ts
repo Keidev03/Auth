@@ -12,7 +12,7 @@ const options = {
         },
         servers: [{ url: config.env.baseURL }]
     },
-    apis: [`src/routers/*.ts`, `src/models/*.ts`]
+    apis: [`src/routes/*.ts`, `src/models/*.ts`]
 }
 
 const specs = swaggerJsDoc(options)
