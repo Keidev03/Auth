@@ -1,0 +1,7 @@
+node_modules/
+# dotenv environment variable files
+.env
+secret.json
+# Finder (MacOS) folder config
+.DS_Store
+
