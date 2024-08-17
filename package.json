@@ -25,11 +25,13 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@types/express-useragent": "^1.0.5",
     "bcryptjs": "^2.4.3",
     "bun": "^1.0.6",
     "cookie-parser": "^1.4.6",
     "cron": "^3.1.6",
     "express": "^4.18.2",
+    "express-useragent": "^1.0.15",
     "generate-password": "^1.7.1",
     "googleapis": "^127.0.0",
     "jimp": "^0.22.10",
@@ -40,6 +42,7 @@
     "nodemailer": "^6.9.7",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
+    "redis": "^4.7.0",
     "stream": "^0.0.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",

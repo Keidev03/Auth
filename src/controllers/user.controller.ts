@@ -1,12 +1,10 @@
 import bcrypt from 'bcryptjs'
 import { Request, Response } from "express"
-import generate from 'generate-password'
 
 import { OSelectUser } from './admin.controller'
 
 import UserSchema, { IUser } from "../models/user.schema"
 
-import SendMail from '../services/mailer.service'
 import { DeleteFileDrive, GeneratePublicDrive, UploadImageDrive } from '../services/drive.service'
 
 const GetOneUser = async (req: any, res: Response) => {
@@ -29,36 +27,6 @@ const GetOneUser = async (req: any, res: Response) => {
 
     } catch (error) {
         return res.status(500).json(error)
-    }
-}
-
-const PostUser = async (req: Request, res: Response) => {
-    try {
-        const { email, name, password } = req.body;
-        const searchUser: IUser = await UserSchema.findOne({ email: email }).select(OSelectUser)
-        if (!!searchUser) return res.status(401).json({ message: "Email already exists" })
-        const hash = await bcrypt.hash(password, 10)
-        const createUser: Record<string, any> = new UserSchema({
-            email: email,
-            name: name,
-            password: hash
-        });
-        const result: IUser = await createUser.save()
-        const response: Record<string, any> = {
-            "data": {
-                id: result.id,
-                googleID: result.googleID,
-                email: result.email,
-                name: result.name,
-                password: result.password,
-                avatar: result.avatar ? `https://drive.google.com/thumbnail?id=${result.avatar}&sz=s500` : null,
-                createdAt: result.createdAt
-            }
-        }
-        return res.status(201).json(response)
-
-    } catch (error) {
-        return res.status(500).json(error);
     }
 }
 
@@ -94,25 +62,6 @@ const ChangePassUser = async (req: any, res: Response) => {
     }
 }
 
-const ResetPassUser = async (req: Request, res: Response) => {
-    try {
-        const email = req.body.email
-        const searchUser: IUser = await UserSchema.findOne({ email: email }).select(OSelectUser)
-        if (!searchUser) return res.status(500).json({ message: "Email doesn't exists" })
-        const newPassword: string = generate.generate({
-            length: 5,
-            numbers: true
-        });
-        const hash: string = await bcrypt.hash(newPassword, 3)
-        await searchUser.updateOne({ password: hash })
-        await SendMail(email, newPassword)
-        return res.status(200).json({ message: "Refresh password successfully" })
-
-    } catch (error) {
-        return res.status(500).json(error)
-    }
-}
-
 const AvatarUser = async (req: any, res: Response) => {
     try {
         const { id, email, name } = req.userData
@@ -130,4 +79,4 @@ const AvatarUser = async (req: any, res: Response) => {
     }
 }
 
-export { GetOneUser, PostUser, PatchUser, ChangePassUser, ResetPassUser, AvatarUser }
+export { GetOneUser, PatchUser, ChangePassUser, AvatarUser }

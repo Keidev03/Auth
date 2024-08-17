@@ -1,45 +1,12 @@
 import express from "express"
 import multer from "multer"
 
-import { GetOneUser, PostUser, PatchUser, ChangePassUser, ResetPassUser, AvatarUser } from "../controllers/user.controller"
-import CheckAuthUser from "../middleware/user.guard"
+import { GetOneUser, PatchUser, ChangePassUser, AvatarUser } from "../controllers/user.controller"
 
 const UserRoutes = express.Router()
 const upload = multer()
 
-UserRoutes.post('/signup', PostUser)
-/**
- * @swagger
- * /signup:
- *  post:
- *      security: []
- *      summary: Create User
- *      tags: [Handle-Users]
- *      parameters:
- *          -   name: id
- *              in: path
- *              description: The ID User
- *              required: true
- *      description: >
- *          This resource is used to log into the system
- *      requestBody:
- *          require: true
- *          content:
- *              application/json:
- *                  example:
- *                      email: example@gmail.com
- *                      name: JonhDoe
- *                      password: 123456
- *      responses:
- *          200:
- *              description: Ok
- *          401:
- *              description: Unauthorized
- *          500:
- *              description: Error
- */
-
-UserRoutes.get('/profile', CheckAuthUser, GetOneUser)
+UserRoutes.get('/profile', GetOneUser)
 /**
  * @swagger
  * /profile:
@@ -47,7 +14,7 @@ UserRoutes.get('/profile', CheckAuthUser, GetOneUser)
  *      security:
  *          -   bearerAuth: []
  *      summary: Get User by ID
- *      tags: [Handle-Users]
+ *      tags: [User]
  *      parameters:
  *          -   name: id
  *              in: path
@@ -64,7 +31,7 @@ UserRoutes.get('/profile', CheckAuthUser, GetOneUser)
  *              description: Error
  */
 
-UserRoutes.patch('/profile', CheckAuthUser, PatchUser)
+UserRoutes.patch('/profile', PatchUser)
 /**
  * @swagger
  *  /profile:
@@ -72,7 +39,7 @@ UserRoutes.patch('/profile', CheckAuthUser, PatchUser)
  *      security:
  *          -   bearerAuth: []
  *      summary: Update User
- *      tags: [Handle-Users]
+ *      tags: [User]
  *      parameters:
  *          -   name: id
  *              in: path
@@ -95,33 +62,8 @@ UserRoutes.patch('/profile', CheckAuthUser, PatchUser)
  *              description: Error
  */
 
-UserRoutes.post('/reset/password', ResetPassUser)
-/**
- * @swagger
- *  /reset/password:
- *  post:
- *      security: []
- *      summary: Reset Password
- *      tags: [Handle-Users]
- *      parameters: []
- *      description: >
- *          This resource is used to log into the system
- *      requestBody:
- *          require: true
- *          content:
- *              application/json:
- *                  example:
- *                      email: example@gmail.com
- *      responses:
- *          200:
- *              description: Ok
- *          401:
- *              description: Unauthorized
- *          500:
- *              description: Error
- */
 
-UserRoutes.put('/password', CheckAuthUser, ChangePassUser)
+UserRoutes.put('/password', ChangePassUser)
 /**
  * @swagger
  *  /password:
@@ -129,7 +71,7 @@ UserRoutes.put('/password', CheckAuthUser, ChangePassUser)
  *      security:
  *          -   bearerAuth: []
  *      summary: Change Password
- *      tags: [Handle-Users]
+ *      tags: [User]
  *      parameters:
  *          -   name: id
  *              in: path
@@ -153,7 +95,7 @@ UserRoutes.put('/password', CheckAuthUser, ChangePassUser)
  *              description: Error
  */
 
-UserRoutes.put('/avatar', upload.single('avatar'), CheckAuthUser, AvatarUser)
+UserRoutes.put('/avatar', upload.single('avatar'), AvatarUser)
 /**
  * @swagger
  *  /avatar:
@@ -161,7 +103,7 @@ UserRoutes.put('/avatar', upload.single('avatar'), CheckAuthUser, AvatarUser)
  *      security:
  *          -   bearerAuth: []
  *      summary: Upload Avatar
- *      tags: [Handle-Users]
+ *      tags: [User]
  *      consumes:
  *          - multipart/form-data
  *          - application/x-www-form-urlencoded

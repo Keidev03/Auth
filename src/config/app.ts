@@ -1,9 +1,11 @@
 import express, { Request, Response, NextFunction } from "express";
+import useragent from "express-useragent"
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 
 const App = (app: any): void => {
 
+    app.use(useragent.express());
     app.use(express.static('public'));
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));

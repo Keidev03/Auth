@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 import config from "../config"
 
-const Database = async (): Promise<void> => {
+const MongoDB = async (): Promise<void> => {
     try {
         const result = await mongoose.connect(config.env.uri)
         console.log('Connection to database')
@@ -11,4 +11,4 @@ const Database = async (): Promise<void> => {
     }
 }
 
-export default Database
+export default MongoDB

@@ -1,7 +1,7 @@
 import express from "express"
 import multer from "multer"
 
-import { GetOneAdmin, AvatarAdmin, ChangePassAdmin, GetAllUser, PatchUser, DeleteUser } from "../controllers/admin.controller"
+import { GetOneAdmin, AvatarAdmin, ChangePassAdmin, GetAllUser, PatchUser, DeleteUser, GetAllToken, DeleteToken } from "../controllers/admin.controller"
 
 const AdminRoutes = express.Router()
 const upload = multer()
@@ -15,7 +15,7 @@ AdminRoutes.get('/profile', GetOneAdmin)
  *      security:
  *          -   bearerAuth: []
  *      summary: Get Admin by ID
- *      tags: [Handle-Admins]
+ *      tags: [Admin]
  *      parameters:
  *          -   name: id
  *              in: path
@@ -40,7 +40,7 @@ AdminRoutes.put('/avatar', upload.single('avatar'), AvatarAdmin)
  *      security:
  *          -   bearerAuth: []
  *      summary: Upload Avatar
- *      tags: [Handle-Admins]
+ *      tags: [Admin]
  *      consumes:
  *          - multipart/form-data
  *          - application/x-www-form-urlencoded
@@ -79,7 +79,7 @@ AdminRoutes.put('/password', ChangePassAdmin)
  *      security:
  *          -   bearerAuth: []
  *      summary: Change Password
- *      tags: [Handle-Admins]
+ *      tags: [Admin]
  *      parameters:
  *          -   name: id
  *              in: path
@@ -111,7 +111,7 @@ AdminRoutes.get('/users', GetAllUser)
  *      security:
  *          -   bearerAuth: []
  *      summary: Get All User
- *      tags: [Handle-Admins]
+ *      tags: [Admin]
  *      parameters: []
  *      description: >
  *          This resource is used to log into the system
@@ -132,7 +132,7 @@ AdminRoutes.patch('/users/:id', PatchUser)
  *      security:
  *          -   bearerAuth: []
  *      summary: Update User
- *      tags: [Handle-Admins]
+ *      tags: [Admin]
  *      parameters:
  *          -   name: id
  *              in: path
@@ -166,12 +166,33 @@ AdminRoutes.delete('/users/:id', DeleteUser)
  *      security:
  *          -   bearerAuth: []
  *      summary: Delete User
- *      tags: [Handle-Admins]
+ *      tags: [Admin]
  *      parameters:
  *          -   name: id
  *              in: path
  *              description: The ID User
  *              required: true
+ *      description: >
+ *          This resource is used to log into the system
+ *      responses:
+ *          200:
+ *              description: Ok
+ *          401:
+ *              description: Unauthorized
+ *          500:
+ *              description: Error
+ */
+
+AdminRoutes.get('/token/:id', GetAllToken)
+/**
+ * @swagger
+ *  /admin/token/{id}:
+ *  get:
+ *      security:
+ *          -   bearerAuth: []
+ *      summary: Get Token
+ *      tags: [Admin]
+ *      parameters:
  *      description: >
  *          This resource is used to log into the system
  *      responses:

@@ -16,7 +16,7 @@ const AdminSchema = new mongoose.Schema({
     status: { type: Boolean, required: true },
     avatar: { type: String, default: null },
     createdAt: { type: Date, required: true, default: Date.now }
-});
+})
 
 AdminSchema.index({ name: 1 })
 

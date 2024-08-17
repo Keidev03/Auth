@@ -18,6 +18,8 @@ const mailPassword = process.env.MAIL_PASSWORD
 const keyRefreshToken: any = process.env.KEY_REFRESH_TOKEN
 const keyAccessToken: any = process.env.KEY_ACCESS_TOKEN
 
+const redisPass: any =  process.env.REDIS_PASS
+
 const scopes: any = ["https://www.googleapis.com/auth/drive"]
 
 const env = {
@@ -33,6 +35,7 @@ const env = {
      mailPassword,
      keyRefreshToken,
      keyAccessToken,
+     redisPass
 }
 
 export default env

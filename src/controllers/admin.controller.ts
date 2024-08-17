@@ -6,8 +6,8 @@ import AdminSchema, { IAdmin } from "../models/admin.schema"
 import UserSchema, { IUser } from "../models/user.schema"
 
 import { UploadImageDrive, GeneratePublicDrive, DeleteFileDrive } from "../services/drive.service"
+import { DelDataRedis, FindAllToken } from "../services/redis.service"
 
-import { IAccessTokenAdmin } from "../utils/token"
 
 export const OSelectAdmin: string = 'id name password super status avatar createdAt'
 export const OSelectUser: string = 'id googleID email name password avatar createdAt'
@@ -42,7 +42,7 @@ const ChangePassAdmin = async (req: any, res: Response) => {
         const id: string = req.params.id
         const oldPassword: string = req.body.oldPassword
         const newPassword: string = req.body.newPassword
-        const checkAdmin: IAccessTokenAdmin = req.adminData
+        const checkAdmin: any = req.adminData
         const searchAdmin: IUser = await AdminSchema.findById(id).select(OSelectAdmin)
         const checkCompare: boolean = await bcrypt.compare(oldPassword, searchAdmin.password)
         if (!checkCompare) return res.status(400).json({ message: "Old password is incorrect" })
@@ -62,7 +62,7 @@ const ChangePassAdmin = async (req: any, res: Response) => {
 const AvatarAdmin = async (req: any, res: Response) => {
     try {
         const fileImage: any = req.file
-        const { id, name } = req.adminData as IAccessTokenAdmin
+        const { id, name } = req.adminData
         const searchAdmin: IAdmin = await AdminSchema.findById(id).select(OSelectAdmin);
         if (name !== searchAdmin.name) return res.status(403).json({ message: "You're not authenticated" })
         const idAvatar: string = await UploadImageDrive(fileImage, id)
@@ -150,6 +150,26 @@ const DeleteUser = async (req: Request, res: Response) => {
 
 }
 
+const GetAllToken = async (req: Request, res: Response) => {
+    try {
+        const ArrayToken = await FindAllToken()
+        res.status(200).json({ data: ArrayToken })
+    } catch (error) {
+        return res.status(500).json(error)
+    }
+}
+
+const DeleteToken = async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id
+        const result = await DelDataRedis(id)
+        res.status(200).json({ message: 'Delete Token Successfull' })
+    } catch (error) {
+        return res.status(500).json(error)
+    }
+}
+
 
 export { GetOneAdmin, AvatarAdmin, ChangePassAdmin }
 export { GetAllUser, PatchUser, DeleteUser }
+export { GetAllToken, DeleteToken }
