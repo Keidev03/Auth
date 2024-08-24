@@ -8,7 +8,8 @@ const CheckAuthAdmins = (req: any, res: Response, next: NextFunction) => {
         return res.status(401).json({ message: 'Insufficient access rights' })
 
     } catch (error) {
-        return res.status(500).json(error)
+        console.log("Admins Guard")
+        return res.status(401).json({ message: 'Auth failed' })
     }
 }
 

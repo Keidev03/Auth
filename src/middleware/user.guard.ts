@@ -12,6 +12,7 @@ const CheckAuthUser = async (req: any, res: Response, next: NextFunction) => {
         req.userData = decoded
         return next();
     } catch (error) {
+        console.log("User Guard")
         return res.status(401).json({ message: 'Auth failed' })
     }
 }

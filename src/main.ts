@@ -26,7 +26,7 @@ MongoDB()
 app.use('/auth', AuthRoutes)
 app.use('/admins', CheckAuthAdmin, CheckAuthAdmins, AdminsRoutes)
 app.use('/admin', CheckAuthAdmin, AdminRoutes)
-app.use('/', CheckAuthUser, UserRoutes)
+app.use('/user', CheckAuthUser, UserRoutes)
 app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(specs))
 
 try {

@@ -12,6 +12,7 @@ const CheckAuthAdmin = async (req: any, res: Response, next: NextFunction) => {
         req.adminData = decoded
         return next()
     } catch (error) {
+        console.log("Admin Guard")
         return res.status(401).json({ message: 'Auth failed' })
     }
 }
