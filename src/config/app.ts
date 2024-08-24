@@ -3,6 +3,7 @@ import useragent from "express-useragent"
 import cors from 'cors'
 import cookieParser from "cookie-parser"
 import morgan from "morgan"
+import config from "."
 
 const App = (app: any): void => {
 
@@ -13,11 +14,11 @@ const App = (app: any): void => {
     app.use(cookieParser())
     app.use(morgan('dev'))
     app.use(cors({
-        origin: 'http://192.168.1.2:5173',
+        origin: config.env.domainList,
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
         allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
         credentials: true
-    }));
+    }))
 };
 
 export default App;

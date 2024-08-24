@@ -3,6 +3,8 @@ import { resolve } from "path"
 const port = process.env.PORT || 3000
 const baseURL = process.env.BASE_URL || 'http://localhost:3000'
 
+const domainList = ['http://localhost:5173']
+
 const uri: any = process.env.URI
 
 const keyFilePath = resolve('secret.json')
@@ -25,6 +27,7 @@ const scopes: any = ["https://www.googleapis.com/auth/drive"]
 const env = {
      port,
      baseURL,
+     domainList,
      uri,
      keyFilePath,
      scopes,
