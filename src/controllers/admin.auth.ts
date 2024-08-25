@@ -10,8 +10,7 @@ import { DelDataRedis } from "../services/redis.service"
 
 const LoginAdmin = async (req: Request, res: Response) => {
     try {
-        const name: string = req.body.name
-        const password: string = req.body.password
+        const { name, password, remember = false } = req.body
         const userAgent: any = req.useragent
         const searchAdmin: any = await AdminSchema.findOne({ name: name }).select(OSelectAdmin)
         if (!searchAdmin) return res.status(404).json({ message: "Invalid login name" })
@@ -21,7 +20,11 @@ const LoginAdmin = async (req: Request, res: Response) => {
         const dataRefreshToken: IRefreshTokenAdmin = { name: searchAdmin.name, browser: userAgent.browser, platform: userAgent.platform }
         const accessToken: string = await AccessTokenAdmin(dataAccessToken)
         const refreshToken: string = await RefreshTokenAdmin(dataRefreshToken)
-        res.cookie("token", refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict" })
+        if (remember) {
+            res.cookie('token', refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict", maxAge: 15 * 24 * 60 * 60 * 1000 })
+        } else {
+            res.cookie('token', refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict" })
+        }
         res.setHeader('Authorization', accessToken)
         const response: Record<string, any> = {
             status: true,

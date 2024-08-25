@@ -13,7 +13,7 @@ import SendMail from "../services/mailer.service"
 
 const SignupUser = async (req: Request, res: Response) => {
     try {
-        const { email, name, password } = req.body;
+        const { email, name, password, remember = false } = req.body
         const userAgent: any = req.useragent
         const searchUser: IUser = await UserSchema.findOne({ email: email }).select(OSelectUser)
         if (!!searchUser) return res.status(401).json({ message: "Email already exists" })
@@ -29,7 +29,11 @@ const SignupUser = async (req: Request, res: Response) => {
         const dataRefreshToken: IRefreshTokenUser = { email: result.email, browser: userAgent.browser, platform: userAgent.platform }
         const accessToken = await AccessTokenUser(dataAccessToken)
         const refreshToken = await RefreshTokenUser(dataRefreshToken)
-        res.cookie('token', refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict" })
+        if (remember) {
+            res.cookie('token', refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict", maxAge: 15 * 24 * 60 * 60 * 1000 })
+        } else {
+            res.cookie('token', refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict" })
+        }
         res.setHeader('Authorization', accessToken)
 
         const response: Record<string, any> = {
@@ -47,8 +51,7 @@ const SignupUser = async (req: Request, res: Response) => {
 
 const LoginUser = async (req: Request, res: Response) => {
     try {
-        const email: string = req.body.email
-        const password: string = req.body.password
+        const { email, password, remember = false } = req.body
         const userAgent: any = req.useragent
         const searchUser: IUser = await UserSchema.findOne({ email: email }).select(OSelectUser)
         if (!searchUser) return res.status(500).json({ message: "Email is not registered" })
@@ -59,7 +62,11 @@ const LoginUser = async (req: Request, res: Response) => {
         const dataRefreshToken: IRefreshTokenUser = { email: searchUser.email, browser: userAgent.browser, platform: userAgent.platform }
         const accessToken = await AccessTokenUser(dataAccessToken)
         const refreshToken = await RefreshTokenUser(dataRefreshToken)
-        res.cookie('token', refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict" })
+        if (remember) {
+            res.cookie('token', refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict", maxAge: 15 * 24 * 60 * 60 * 1000 })
+        } else {
+            res.cookie('token', refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict" })
+        }
         res.setHeader('Authorization', accessToken)
         const response: Record<string, any> = {
             status: true,
@@ -85,7 +92,7 @@ const LoginUserWithGoogle = async (req: Request, res: Response) => {
         if (searchUser.googleID) {
             const accessToken: string = await AccessTokenUser(dataAccessToken)
             const refreshToken: string = await RefreshTokenUser(dataRefreshToken)
-            res.cookie("token", refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict" })
+            res.cookie('token', refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict", maxAge: 15 * 24 * 60 * 60 * 1000 })
             res.setHeader('Authorization', accessToken)
             const response: Record<string, any> = {
                 status: true,
@@ -107,7 +114,7 @@ const LoginUserWithGoogle = async (req: Request, res: Response) => {
         await searchUser.save()
         const accessToken: string = await AccessTokenUser(dataAccessToken);
         const refreshToken: string = await RefreshTokenUser(dataRefreshToken);
-        res.cookie("token", refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict" })
+        res.cookie('token', refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict", maxAge: 15 * 24 * 60 * 60 * 1000 })
         res.setHeader('Authorization', accessToken)
         const response: Record<string, any> = {
             status: true,
@@ -126,7 +133,7 @@ const LoginUserWithGoogle = async (req: Request, res: Response) => {
     const result = await createUser.save()
     const accessToken: string = await AccessTokenUser({ id: result.id, email: email, name: name })
     const refreshToken: string = await RefreshTokenUser({ email: email, browser: userAgent.browser, platform: userAgent.platform })
-    res.cookie("token", refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict" })
+    res.cookie('token', refreshToken, { httpOnly: true, secure: true, path: '/', sameSite: "strict", maxAge: 15 * 24 * 60 * 60 * 1000 })
     res.setHeader('Authorization', accessToken)
     const response: Record<string, any> = {
         statuss: true,
